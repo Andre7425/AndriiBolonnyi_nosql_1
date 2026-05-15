@@ -1,6 +1,5 @@
 # scripts/01_load_data.py
 import os
-import ast
 import pandas as pd
 from pymongo import MongoClient
 from tqdm import tqdm
@@ -43,10 +42,10 @@ for col in float_cols:
 query = df["artists"].isna() | df["track_name"].isna()
 records = df[~query].to_dict("records")
 
-# Завантажуємо батчами — вставка 114k документів однією операцією може впасти по пам'яті
+# Завантажуємо батчами—вставка 114k документів однією операцією може впасти
 for i in tqdm(range(0, len(records), BATCH_SIZE)):
-    db["tracks_raw"].insert_many(records[i : i + BATCH_SIZE])
+    db["tracks_raw"].insert_many(records[i: i + BATCH_SIZE])
 
 print(f"Завантажено документів:{db['tracks_raw'].count_documents({})}")
-print(f"Приклад документа:")
+print("Приклад документа:")
 print(db["tracks_raw"].find_one())
